@@ -41,5 +41,55 @@
  *   // => { name: "Priya", totalMarks: 63, percentage: 31.5, grade: "F", ... }
  */
 export function generateReportCard(student) {
-  // Your code here
+  if(typeof student !== "object" || student === null){
+    return null;
+  }
+  let {name, marks} = student;
+  if(typeof name !== "string" || name.trim() === ""
+  ){
+    return null;
+  }
+  if(typeof marks !== "object" || !marks ){
+    return null;
+  }
+  let allMarks = Object.values(marks);
+  if(allMarks.length === 0){
+    return null;
+  }
+  let totalMarks = 0;
+  let passedSubjects = Object.keys(marks).filter((sub) => marks[sub] >= 40);
+  let failedSubjects = Object.keys(marks).filter((sub) => marks[sub] < 40);
+  let highestMark = allMarks[0];
+  let lowestMark = allMarks[0];
+  for(let mark of allMarks){
+    if(typeof mark !== "number" || mark < 0 || mark > 100){
+      return null;
+    }
+    if(mark > highestMark){
+      highestMark = mark;
+    }
+    if(mark < lowestMark){
+      lowestMark = mark;
+    }
+    totalMarks += mark;
+  }
+  let percentage = parseFloat(((totalMarks / (allMarks.length * 100)) * 100).toFixed(2));
+  let grade;
+  if(percentage >= 90){
+    grade = "A+"
+  }else if(percentage >= 80){
+    grade = "A"
+  }else if(percentage >= 70){
+    grade = "B";
+  }else if(percentage >= 60){
+    grade = "C"
+  }else if(percentage >= 40){
+    grade = "D"
+  }else {
+    grade = "F"
+  }
+  let highestSubject = Object.entries(marks).find(([sub, mark]) => mark === highestMark)?.[0];
+  let lowestSubject = Object.entries(marks).find(([sub, mark]) => mark === lowestMark)?.[0];
+  let obj = {name, totalMarks,percentage, grade, highestSubject, lowestSubject, passedSubjects,failedSubjects,subjectCount: allMarks.length}
+  return obj
 }
